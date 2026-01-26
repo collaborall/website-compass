@@ -461,11 +461,16 @@
         throw new Error('No access token returned')
       }
 
-      const url = new URL(targetBaseUrl)
-      url.searchParams.set('token', accessToken)
-      url.searchParams.set('redirect', '/apps/019a5484-8d2f-7180-9ee3-61e12c4ae7b4?split=single%26projectId=cde99d58-e5a0-491e-9709-c54ef1345f85%26notepad=apps')
+      const redirectUrl = new URL(targetBaseUrl)
+      redirectUrl.searchParams.set('split', 'single')
+      redirectUrl.searchParams.set('projectId', 'cde99d58-e5a0-491e-9709-c54ef1345f85')
+      redirectUrl.searchParams.set('notepad', 'apps')
 
-      window.location.assign(url.toString())
+      const loginUrl = new URL('https://os.antcde.io/login')
+      loginUrl.searchParams.set('redirect', `${redirectUrl.pathname}${redirectUrl.search}`)
+      loginUrl.searchParams.set('token', accessToken)
+
+      window.location.assign(loginUrl.toString())
     }
     catch (error) {
       console.error(error)
