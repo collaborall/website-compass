@@ -82,24 +82,21 @@
       .logo-pill {
           height: 40px;
           min-width: 120px;
-          padding: 0 10px;
+          padding: 4px 10px;
           display: grid;
           place-items: center;
           border: 1px solid rgba(0, 0, 0, 0.12);
           border-radius: 4px;
           background: rgba(255, 255, 255, 0.8);
-          color: rgba(0, 0, 0, 0.75);
-          font-size: 12px;
-          font-weight: 600;
           user-select: none;
       }
 
-      .logo-pill.eu {
-          background: #003399;
-          border-color: #002b80;
-          color: #ffcc00;
-          font-weight: 800;
-          letter-spacing: 0.02em;
+      .logo-pill img {
+          max-height: 32px;
+          max-width: 100%;
+          width: auto;
+          display: block;
+          object-fit: contain;
       }
 
       .headline {
@@ -334,8 +331,12 @@
     </div>
 
       <div class="right">
-        <div class="logo-pill">4D architects</div>
-        <div class="logo-pill eu">EU</div>
+        <div class="logo-pill">
+          <img src="./logo_4d.jpg" alt="4D Architects logo" />
+        </div>
+        <div class="logo-pill">
+          <img src="./eu.png" alt="European Union logo" />
+        </div>
       </div>
   </div>
 
@@ -347,7 +348,6 @@
   </div>
 
   <aside class="side-panel" aria-hidden="true">
-    <h3>Multicriteria Optimizer</h3>
     <img src="./score-example.png" alt="Radar chart" />
   </aside>
 
