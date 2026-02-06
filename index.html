@@ -6,312 +6,389 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GCBC — Login</title>
   <style>
-      :root {
-          --bg: #4f646c;
-          --overlay: rgba(55, 78, 86, 0.72);
-          --panel: rgba(245, 248, 249, 0.92);
-          --panel-strong: rgba(232, 238, 240, 0.92);
-          --text: #1f2a2e;
-          --muted: #5d727a;
-          --brand: #2f7b83;
-          --accent: #8bb843;
-          --shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+    :root {
+      --bg: #4f646c;
+      --overlay: rgba(55, 78, 86, 0.72);
+      --panel: rgba(245, 248, 249, 0.92);
+      --panel-strong: rgba(255, 255, 255);
+      --text: #1f2a2e;
+      --muted: #5d727a;
+      --brand: #2f7b83;
+      --accent: #8bb843;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+
+      --radius: 10px;
+      --gap: clamp(14px, 2.2vw, 22px);
+      --pad: clamp(14px, 2.2vw, 22px);
+
+      /* Wider on desktop */
+      --container: 100vw;
+      --container-wide: 1900px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: #eaf2f4;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0)),
+        linear-gradient(0deg, var(--overlay), var(--overlay)),
+        url("./3d-example.png");
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 64px;
+      background: rgba(255, 255, 255, 1);
+      color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 18px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      flex-wrap: wrap;
+    }
+
+    .topbar .left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.05;
+      min-width: 240px;
+    }
+
+    .topbar .left strong {
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      font-size: 20px;
+    }
+
+    .topbar .left span {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.65);
+      font-style: italic;
+    }
+
+    .topbar .right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .logo-pill {
+      min-width: 108px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      user-select: none;
+    }
+
+    .logo-pill img {
+      max-height: 50px;
+      max-width: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* Main layout container */
+    .wrap {
+      width: 100%;
+      padding: var(--pad) var(--pad) calc(var(--pad) + 46px);
+      flex: 1;
+
+      display: flex;
+      grid-template-columns: 1.05fr minmax(40px, 1fr) 0.75fr;
+      gap: var(--gap);
+      align-items: start;
+    }
+
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .headline {
+      margin-top: clamp(10px, 2vw, 26px);
+      flex: 1;
+    }
+
+    .headline h1 {
+      margin: 0 0 10px 0;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      font-size: clamp(24px, 3.2vw, 52px);
+      color: rgba(240, 248, 250, 0.92);
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
+      line-height: 1.08;
+      -webkit-line-clamp: 2;
+    }
+
+    .headline .kicker {
+      margin: 0;
+      max-width: 72ch;
+      color: rgba(240, 248, 250, 0.86);
+      font-size: clamp(12px, 1.4vw, 14px);
+      line-height: 1.5;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .side-panel {
+      background: rgba(220, 232, 236, 0.72);
+      color: #0b1b20;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: var(--radius);
+      padding: 14px;
+      max-width: 300px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+    }
+
+    .side-panel h3 {
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .side-panel img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      opacity: 0.95;
+    }
+
+    .login-panel {
+      max-width: 700px;
+      margin-top: var(--gap);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    #login-form {
+      min-width: 300px;
+    }
+
+    .login-panel .content {
+      padding: 22px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .login-panel h2 {
+      margin: 0 0 6px 0;
+      color: var(--brand);
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .login-panel .sub {
+      margin: 0;
+      font-weight: 800;
+      font-size: 16px;
+      color: #111;
+      line-height: 1.35;
+    }
+
+    .login-panel .desc {
+      margin: 12px 0 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .login-panel .lower {
+      background: var(--panel-strong);
+      padding: 16px 22px 18px 22px;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+      grid-auto-rows: min-content;
+    }
+
+    .input {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(31, 42, 46, 0.2);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      padding: 0 12px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    input {
+      width: 100%;
+      border: 0;
+      outline: none;
+      background: transparent;
+      font-size: 15px;
+      color: #233136;
+      padding: 0;
+    }
+
+    input::placeholder {
+      color: rgba(35, 49, 54, 0.65);
+    }
+
+    .btn {
+      height: 48px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(139, 184, 67, 0.35);
+    }
+
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.75; cursor: not-allowed; }
+
+    .mini {
+      border-left: 1px solid rgba(0, 0, 0, 0.08);
+      padding-left: 16px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mini .label {
+      font-weight: 900;
+      font-size: 13px;
+      line-height: 1.15;
+      letter-spacing: 0.02em;
+    }
+
+    .mini .method {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.62);
+      font-style: italic;
+      margin-top: -6px;
+      line-height: 1.35;
+    }
+
+    .mini img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.15));
+      max-height: 360px;
+      object-fit: contain;
+    }
+
+    .footer {
+      padding: 8px 16px;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.85);
+      background: rgba(0, 0, 0, 0.14);
+      backdrop-filter: blur(2px);
+    }
+
+    /* Tablet: stack right column under headline */
+    @media (max-width: 980px) {
+      .wrap {
+        display: grid;
+        grid-template-columns: 1fr;
       }
 
-      * {
-          box-sizing: border-box;
-      }
-
-      html, body {
-          height: 100%;
-      }
-
-      body {
-          margin: 0;
-          font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-          color: #eaf2f4;
-          background: var(--bg);
-          overflow-x: hidden;
-      }
-
-      .hero {
-          min-height: 100vh;
-          position: relative;
-          background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
-          linear-gradient(0deg, var(--overlay), var(--overlay)),
-          url("./3d-example.png");
-          background-size: cover;
-          background-position: center;
-      }
-
-      .topbar {
-          height: 64px;
-          background: rgba(255, 255, 255, 0.92);
-          color: #111;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 18px;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-      }
-
-      .topbar .left {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          line-height: 1.05;
-      }
-
-      .topbar .left strong {
-          font-weight: 800;
-          letter-spacing: 0.02em;
-      }
-
-      .topbar .left span {
-          font-size: 12px;
-          color: rgba(0, 0, 0, 0.65);
-          font-style: italic;
-      }
-
-      .topbar .right {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-      }
-
-      .logo-pill {
-          height: 40px;
-          min-width: 120px;
-          padding: 4px 10px;
-          display: grid;
-          place-items: center;
-          border: 1px solid rgba(0, 0, 0, 0.12);
-          border-radius: 4px;
-          background: rgba(255, 255, 255, 0.8);
-          user-select: none;
-      }
-
-      .logo-pill img {
-          max-height: 32px;
-          max-width: 100%;
-          width: auto;
-          display: block;
-          object-fit: contain;
-      }
-
-      .headline {
-          position: absolute;
-          left: 48px;
-          top: 110px;
-          max-width: min(980px, calc(100vw - 96px));
-      }
-
-      .headline h1 {
-          margin: 0;
-          font-weight: 800;
-          letter-spacing: -0.01em;
-          font-size: clamp(28px, 3.2vw, 52px);
-          color: rgba(240, 248, 250, 0.92);
-          text-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
+      .spacer {
+        display: none;
       }
 
       .side-panel {
-          position: absolute;
-          top: 110px;
-          right: 34px;
-          width: 320px;
-          background: rgba(220, 232, 236, 0.75);
-          color: #0b1b20;
-          border: 1px solid rgba(255, 255, 255, 0.35);
-          border-radius: 6px;
-          padding: 14px;
-          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-          backdrop-filter: blur(4px);
-      }
-
-      .side-panel h3 {
-          margin: 0 0 10px 0;
-          font-size: 14px;
-          letter-spacing: 0.03em;
-          text-transform: uppercase;
-      }
-
-      .side-panel img {
-          width: 100%;
-          height: auto;
-          display: block;
-          opacity: 0.95;
+        order: 2;
       }
 
       .login-panel {
-          position: absolute;
-          left: 48px;
-          bottom: 46px;
-          width: min(640px, calc(100vw - 96px));
-          background: var(--panel);
-          color: var(--text);
-          border-radius: 3px;
-          box-shadow: var(--shadow);
-          overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.25);
+        order: 3;
+      }
+    }
+
+
+    /* Mobile: simplify */
+    @media (max-width: 640px) {
+      .topbar { padding: 10px 14px; }
+      .topbar .left { min-width: 0; }
+      .topbar .right {
+        width: 100%;
+        justify-content: flex-start;
+        margin-left: 0;
       }
 
-      .login-panel .content {
-          padding: 22px 22px 16px 22px;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-          background: rgba(255, 255, 255, 0.78);
+      .wrap {
+        display: grid;
+        width: 100%;
+        padding: 14px 14px calc(14px + 46px);
       }
 
-      .login-panel h2 {
-          margin: 0 0 4px 0;
-          color: var(--brand);
-          font-weight: 900;
-          letter-spacing: 0.01em;
-          font-size: 20px;
-      }
-
-      .login-panel .sub {
-          margin: 0;
-          font-weight: 800;
-          font-size: 14px;
-          color: #111;
-      }
-
-      .login-panel .desc {
-          margin: 12px 0 0 0;
-          color: var(--muted);
-          font-size: 13px;
-          line-height: 1.45;
-          max-width: 58ch;
-      }
-
+      .login-panel .content,
       .login-panel .lower {
-          background: var(--panel-strong);
-          padding: 16px 22px 18px 22px;
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 16px;
-          align-items: start;
+        padding: 14px;
       }
 
-      form {
-          display: grid;
-          gap: 10px;
-          grid-auto-rows: min-content;
-      }
-
-      .input {
-          height: 46px;
-          display: flex;
-          align-items: center;
-          border: 1px solid rgba(31, 42, 46, 0.2);
-          background: rgba(255, 255, 255, 0.95);
-          border-radius: 6px;
-          padding: 0 12px;
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-      }
-
-      input {
-          width: 100%;
-          border: 0;
-          outline: none;
-          background: transparent;
-          font-size: 15px;
-          color: #233136;
-          padding: 0;
-      }
-
-      input::placeholder {
-          color: rgba(35, 49, 54, 0.65);
-      }
-
-      .btn {
-          height: 48px;
-          border: 0;
-          border-radius: 3px;
-          background: var(--accent);
-          color: #fff;
-          font-weight: 800;
-          font-size: 16px;
-          cursor: pointer;
-          box-shadow: 0 10px 20px rgba(139, 184, 67, 0.35);
-      }
-
-      .btn:active {
-          transform: translateY(1px);
-      }
+      .login-panel .lower { grid-template-columns: 1fr; }
 
       .mini {
-          width: 164px;
-          border-left: 1px solid rgba(0, 0, 0, 0.08);
-          padding-left: 16px;
-          display: grid;
-          align-content: start;
-          gap: 10px;
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        padding-top: 12px;
       }
 
-      .mini .label {
-          font-weight: 900;
-          font-size: 14px;
-          line-height: 1.1;
-      }
+      .mini img { max-height: 260px; }
+    }
 
-      .mini .method {
-          font-size: 12px;
-          color: rgba(0, 0, 0, 0.62);
-          font-style: italic;
-          margin-top: -6px;
-      }
-
+    /* Ultra-wide: breathe more on huge monitors */
+    @media (min-width: 1800px) {
       .mini img {
-          width: 100%;
-          height: auto;
-          display: block;
-          filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.15));
+        max-height: 420px;
+      }
+      .login-panel .lower {
+        grid-template-columns: 1fr 320px;
       }
 
-      .footer {
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-          padding: 8px 16px;
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.85);
-          background: rgba(0, 0, 0, 0.14);
-          backdrop-filter: blur(2px);
+      .side-panel {
+        max-width: 400px;
       }
 
-      @media (max-width: 920px) {
-          .side-panel {
-              display: none;
-          }
+      .side-panel img {
+        width: 400px;
       }
-
-      @media (max-width: 640px) {
-          .headline {
-              left: 18px;
-              right: 18px;
-          }
-
-          .login-panel {
-              left: 18px;
-              right: 18px;
-              width: auto;
-          }
-
-          .login-panel .lower {
-              grid-template-columns: 1fr;
-          }
-
-          .mini {
-              width: auto;
-              border-left: 0;
-              padding-left: 0;
-              border-top: 1px solid rgba(0, 0, 0, 0.08);
-              padding-top: 14px;
-          }
-      }
+    }
   </style>
 </head>
 
@@ -320,8 +397,7 @@
   Place these files in the SAME folder as this index.html:
   - score-example.png
   - 3d-example.png
-  - circularity ladder_shadows.png  (note the space)
-  If you rename that last one, update the <img src> below accordingly.
+  - circularity-ladder-shadows.png
 -->
 <div class="hero">
   <div class="topbar">
@@ -330,86 +406,91 @@
       <span>Method Dr. E. Durmisevic</span>
     </div>
 
-      <div class="right">
-        <div class="logo-pill">
-          <img src="./logo_4d.jpg" alt="4D Architects logo" />
-        </div>
-        <div class="logo-pill">
-          <img src="./eu.png" alt="European Union logo" />
-        </div>
+    <div class="right">
+      <div class="logo-pill">
+        <img src="./logo_4d.jpg" alt="4D Architects logo" />
       </div>
-  </div>
-
-  <div class="headline">
-    <h1>
-      Dashboard for assessing the impact of design decisions<br />
-      on CO₂, materials, energy and well-being
-    </h1>
-  </div>
-
-  <aside class="side-panel" aria-hidden="true">
-    <img src="./score-example.png" alt="Radar chart" />
-  </aside>
-
-  <section class="login-panel" role="dialog" aria-label="Login">
-    <div class="content">
-      <h2>GREEN AND CIRCULAR BUILDING COMPASS (GCBC) - Dashboard</h2>
-      <p class="sub">Decision Support for Multicriteria Optimisation</p>
-      <p class="desc">
-        The Green Circular COMPASS Dashboard integrates circularity—by combining the Transformation Capacity Index of a
-        building and the Reuse Potential Index of its materials into a single circularity profile—with energy efficiency
-        and wellbeing. It is a multicriteria decision-support dashboard for healthcare buildings, developed by 4D
-        Architects Amsterdam.
-        <br>
-        <br>
-        COMPASS brings together green and circular building indicators in an interactive way, enabling real-life
-        analyses of design solutions or potential improvements to the performance of existing buildings.
-      </p>
-    </div>
-
-    <div class="lower">
-      <form id="login-form" onsubmit="event.preventDefault();">
-        <div class="input">
-          <input
-            type="text"
-            name="username"
-            autocomplete="username"
-            placeholder="Gebruikersnaam"
-            aria-label="Gebruikersnaam"
-          />
-        </div>
-
-        <div class="input">
-          <input
-            type="password"
-            name="password"
-            autocomplete="current-password"
-            placeholder="Wachtwoord"
-            aria-label="Wachtwoord"
-          />
-        </div>
-
-        <button class="btn" type="submit">Login</button>
-      </form>
-
-      <div class="mini" aria-hidden="true">
-        <div class="label">CIRCULAR BUILDING PROFILE</div>
-        <div class="method">Method Dr. Elma Durmisevic</div>
-
-        <!-- Space in filename => URL-encode it -->
-        <img
-          src="./circularity-ladder-shadows.png"
-          alt="Circularity ladder"
-          style="object-fit: contain; height: 400px"
-        />
+      <div class="logo-pill">
+        <img src="./eu.png" alt="European Union logo" />
       </div>
     </div>
-  </section>
+  </div>
+
+  <main class="wrap">
+    <div class="left-panel">
+      <header class="headline">
+        <h1>
+          Dashboard for assessing the impact of design decisions<br />
+          on CO₂, materials, energy and well-being
+        </h1>
+        <p class="kicker">
+          Decision support for multicriteria optimisation — combining circularity, energy efficiency and wellbeing into one interactive profile.
+        </p>
+      </header>
+
+      <section class="login-panel" role="dialog" aria-label="Login">
+        <div class="content">
+          <h2>GREEN AND CIRCULAR BUILDING COMPASS (GCBC) - Dashboard</h2>
+          <p class="sub">Decision Support for Multicriteria Optimisation</p>
+          <p class="desc">
+            The Green Circular <u>COMPASS</u> Dashboard integrates circularity—by combining the Transformation Capacity Index of a
+            building and the Reuse Potential Index of its materials into a single circularity profile—with energy efficiency
+            and wellbeing. It is a multicriteria decision-support dashboard for healthcare buildings, developed by <u>4D
+            Architects Amsterdam</u>.
+            <br><br>
+            <u>COMPASS</u> brings together green and circular building indicators in an interactive way, enabling real-life
+            analyses of design solutions or potential improvements to the performance of existing buildings.
+          </p>
+        </div>
+
+        <div class="lower">
+          <form id="login-form" onsubmit="event.preventDefault();">
+            <div class="input">
+              <input
+                type="text"
+                name="username"
+                autocomplete="username"
+                placeholder="Gebruikersnaam"
+                aria-label="Gebruikersnaam"
+              />
+            </div>
+
+            <div class="input">
+              <input
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Wachtwoord"
+                aria-label="Wachtwoord"
+              />
+            </div>
+
+            <button class="btn" type="submit">Login</button>
+          </form>
+
+          <div class="mini" aria-hidden="true">
+            <div class="label">CIRCULAR BUILDING PROFILE</div>
+            <div class="method">Method Dr. Elma Durmisevic</div>
+
+            <img
+              src="./circularity-ladder-shadows.png"
+              alt="Circularity ladder"
+            />
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="side-panel" aria-label="Example score">
+      <img src="./score-example.png" alt="Radar chart" />
+    </aside>
+  </main>
 
   <div class="footer">
-    ©4D Architects Amsterdam (GCB Compass) — powered by CollaborAll/ANT
+    ©4D Architects Amsterdam (GCB Compass) — made by collaborall powered by ANT OS
   </div>
 </div>
+
 <script>
   const form = document.getElementById('login-form')
   const submitButton = form.querySelector('button[type="submit"]')
@@ -444,22 +525,15 @@
 
       const response = await fetch(tokenEndpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body,
       })
 
-      if (!response.ok) {
-        throw new Error(`Auth failed: ${response.status}`)
-      }
+      if (!response.ok) throw new Error(`Auth failed: ${response.status}`)
 
       const data = await response.json()
       const accessToken = data?.access_token
-
-      if (!accessToken) {
-        throw new Error('No access token returned')
-      }
+      if (!accessToken) throw new Error('No access token returned')
 
       const redirectUrl = new URL(targetBaseUrl)
       redirectUrl.searchParams.set('split', 'single')
@@ -471,12 +545,10 @@
       loginUrl.searchParams.set('token', accessToken)
 
       window.location.assign(loginUrl.toString())
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error)
       alert('Inloggen mislukt. Controleer je gegevens.')
-    }
-    finally {
+    } finally {
       setBusy(false)
     }
   })
