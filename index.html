@@ -180,7 +180,7 @@
 
     .login-panel {
       max-width: clamp(550px, 31vw, 700px);
-      margin-top: var(--gap);
+      margin-top: calc(var(--gap) + 26px);
       background: var(--panel);
       color: var(--text);
       border-radius: var(--radius);
@@ -283,8 +283,8 @@
 
     .mini-img img {
       width: auto;
-      height: auto;
-      max-height: 200px;
+      height: 400px;
+      max-height: 400px;
       display: block;
       border-radius: 10px;
       filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.15));
@@ -301,7 +301,7 @@
 
     .mini-text .label {
       font-weight: 900;
-      font-size: 13px;
+      font-size: 15px;
       line-height: 1.15;
       letter-spacing: 0.02em;
     }
