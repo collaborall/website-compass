@@ -1,551 +1,241 @@
-<!-- client-pages/gcbc-login/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GCBC — Login</title>
+  <title>Decoding Circular Capacity of Buildings</title>
   <style>
-    :root {
-      --bg: #4f646c;
-      --overlay: rgba(21, 96, 130, 0.28);
-      --panel: rgba(245, 248, 249, 0.92);
-      --panel-strong: rgba(255, 255, 255);
-      --text: #1f2a2e;
-      --muted: #5d727a;
-      --brand: #2f7b83;
-      --accent: #8bb843;
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
-
-      --radius: 10px;
-      --gap: clamp(14px, 2.2vw, 22px);
-      --pad: clamp(14px, 2.2vw, 22px);
-
-      /* Wider on desktop */
-      --container: 100vw;
-      --container-wide: 1900px;
-    }
-
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
 
     body {
-      margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color: #eaf2f4;
-      background: var(--bg);
+      background: #b8c8c0;
       overflow-x: hidden;
     }
 
+    /* ── Full-page hero ── */
     .hero {
       min-height: 100vh;
       position: relative;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0)),
-        linear-gradient(0deg, var(--overlay), var(--overlay)),
-        url("./3d-example.png");
-      background-size: cover;
-      background-position: center;
       display: flex;
       flex-direction: column;
+      background: url("./260506-background-login-dashboard.jpg") center/cover no-repeat;
     }
 
+    /* Preview image — layer 0 (below overlay) */
+    .preview-img {
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      z-index: 0;
+      width: clamp(100px, 14vw, 200px);
+      border-radius: 10px;
+      display: block;
+    }
+
+    /* Semi-transparent overlay — layer 1 (covers both background AND preview image) */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(235, 242, 238, 0.52);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── Top bar — layer 2 ── */
     .topbar {
-      min-height: 64px;
-      background: rgba(255, 255, 255, 1);
-      color: #111;
+      position: relative;
+      z-index: 3;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: 12px;
-      padding: 4px 18px;
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.92);
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(6px);
       flex-wrap: wrap;
-    }
-
-    .topbar .left {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      line-height: 1.05;
-      min-width: 240px;
-    }
-
-    .topbar .left strong {
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      font-size: 20px;
-    }
-
-    .topbar .left span {
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.65);
-      font-style: italic;
-    }
-
-    .topbar .right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-left: auto;
-    }
-
-    .logo-pill {
-      min-width: 108px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      user-select: none;
+      min-height: 64px;
     }
 
     .logo-pill img {
-      max-height: 50px;
-      max-width: 100%;
+      max-height: 48px;
+      max-width: 130px;
       width: auto;
       display: block;
       object-fit: contain;
     }
 
-    /* Main layout container */
-    .wrap {
-      width: 100%;
-      padding: var(--pad) var(--pad) calc(var(--pad) + 46px);
-      flex: 1;
-
-      display: flex;
-      gap: var(--gap);
-      align-items: start;
-    }
-
-    .left-panel {
+    /* ── Main content — layer 2 ── */
+    .content {
+      position: relative;
+      z-index: 3;
       flex: 1;
       display: flex;
       flex-direction: column;
-    }
-
-    .headline {
-      margin-top: clamp(10px, 2vw, 26px);
-      flex: 1;
-    }
-
-    .headline h1 {
-      margin: 0 0 10px 0;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      font-size: clamp(24px, 2.3vw, 48px);
-      color: #C0D8DE;
-      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
-      line-height: 1.5;
-    }
-
-    .headline {
-      margin: 0;
-      max-width: 72ch;
-      color: #C0D8DE;
-      font-size: clamp(24px, 2.3vw, 48px);
-      line-height: 1.5;
-      font-weight: 700;
-      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.18);
-    }
-
-    .side-panel {
-      background: #fff;
-      color: #0b1b20;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      border-radius: var(--radius);
-      max-width: 300px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-      overflow: hidden;
-    }
-
-    .side-tint {
-      background: rgba(21, 96, 130, 0.14);
-      padding: 14px;
-    }
-
-    .side-panel h3 {
-      margin: 0 0 10px 0;
-      font-size: 13px;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-    }
-
-    .side-panel img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 8px;
-      opacity: 0.95;
-    }
-
-    .login-panel {
-      max-width: clamp(550px, 31vw, 700px);
-      margin-top: calc(var(--gap) + 26px);
-      background: var(--panel);
-      color: var(--text);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-    }
-
-
-    .login-panel .content {
-      padding: 22px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      background: #ffffff;
-    }
-
-    .login-panel h2 {
-      margin: 0 0 6px 0;
-      color: var(--brand);
-      font-weight: 900;
-      letter-spacing: 0.01em;
-      font-size: 18px;
-      line-height: 1.15;
-    }
-
-    .login-panel .sub {
-      margin: 0;
-      font-weight: 800;
-      font-size: 16px;
-      color: #111;
-      line-height: 1.35;
-    }
-
-    .login-panel .desc {
-      margin: 12px 0 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .login-panel .lower {
-      background: linear-gradient(rgba(21,96,130,0.14), rgba(21,96,130,0.14)) #fff;
-      padding: 16px 22px 18px 22px;
-      display: grid;
-      grid-template-columns: 1.2fr auto 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    form {
-      display: grid;
-      gap: 10px;
-      grid-auto-rows: min-content;
-    }
-
-    .input {
-      height: 46px;
-      display: flex;
       align-items: center;
-      border: 1px solid rgba(31, 42, 46, 0.2);
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 10px;
-      padding: 0 12px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      justify-content: flex-start;
+      gap: clamp(40px, 6vw, 80px);
+      padding: clamp(48px, 10vw, 120px) clamp(20px, 5vw, 80px) clamp(32px, 5vw, 72px);
     }
 
-    input {
-      width: 100%;
-      border: 0;
-      outline: none;
-      background: transparent;
-      font-size: 15px;
-      color: #233136;
-      padding: 0;
-    }
-
-    input::placeholder {
-      color: rgba(35, 49, 54, 0.65);
-    }
-
-    .btn {
-      height: 48px;
-      border: 0;
-      border-radius: 10px;
-      background: var(--accent);
+    /* ── Title ── */
+    h1 {
+      text-align: center;
+      font-size: clamp(20px, 3.6vw, 52px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       color: #fff;
-      font-weight: 800;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(139, 184, 67, 0.35);
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
+      line-height: 1.15;
+      width: 100%;
     }
 
-    .btn:active { transform: translateY(1px); }
-    .btn:disabled { opacity: 0.75; cursor: not-allowed; }
-
-    .mini-img {
-      border-left: 1px solid rgba(0, 0, 0, 0.08);
-      padding-left: 16px;
-      min-width: 0;
+    /* ── Two-button grid ── */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(14px, 2.5vw, 36px);
+      width: 100%;
+      max-width: 820px;
     }
 
-    .mini-img img {
-      width: auto;
-      height: 400px;
-      max-height: 400px;
-      display: block;
-      border-radius: 10px;
-      filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.15));
-      object-fit: contain;
-    }
-
-    .mini-text {
-      padding-left: 16px;
+    .tool-btn {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      min-width: 0;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(4px, 0.8vw, 10px);
+      padding: clamp(20px, 3vw, 44px) clamp(24px, 3.5vw, 52px);
+      aspect-ratio: 530 / 330;
+      border-radius: 50px;
+      text-decoration: none;
+      color: #fff;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      text-align: center;
+      line-height: 1.4;
     }
 
-    .mini-text .label {
-      font-weight: 900;
-      font-size: 15px;
-      line-height: 1.15;
-      letter-spacing: 0.02em;
+    .tool-btn:hover  { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22); }
+    .tool-btn:active { transform: translateY(0); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18); }
+
+    .tool-btn.dashboard { background: #4EA72E; }
+    .tool-btn.rpindex   { background: #C4DB20; color: #0E2841; }
+
+    .tool-btn .label-small {
+      font-size: clamp(10px, 1.6vw, 26px);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.88;
+      white-space: nowrap;
     }
 
-    .mini-text .method {
+    .tool-btn .label-big {
+      font-size: clamp(22px, 3.2vw, 45px);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      line-height: 1.1;
+    }
+
+    /* ── Footer — layer 2 ── */
+    footer {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      padding: 9px 20px;
       font-size: 12px;
-      color: rgba(0, 0, 0, 0.62);
-      font-style: italic;
-      line-height: 1.35;
+      color: rgba(0, 0, 0, 0.58);
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(4px);
+      border-top: 1px solid rgba(0, 0, 0, 0.07);
     }
 
-    .footer {
-      padding: 8px 16px;
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.85);
-      background: rgba(0, 0, 0, 0.14);
-      backdrop-filter: blur(2px);
-    }
+    /* ── Responsive ── */
 
-    /* Tablet: stack right column under headline */
-    @media (max-width: 980px) {
-      .wrap {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .login-panel {
-        max-width: 100%;
-        width: 100%;
+    /* Tablet — shrink preview image */
+    @media (max-width: 900px) {
+      .preview-img {
+        width: clamp(80px, 11vw, 140px);
+        top: 68px;
       }
     }
 
-
-    /* Mobile: simplify */
-    @media (max-width: 640px) {
-      .topbar { padding: 10px 14px; }
-      .topbar .left { min-width: 0; }
-      .topbar .right {
-        width: 100%;
-        justify-content: flex-start;
-        margin-left: 0;
+    /* Mobile — stack buttons, hide preview, swap background */
+    @media (max-width: 580px) {
+      .hero {
+        background-image: url("./260506-background-login-dashboard-mobile.jpg");
       }
 
-      .wrap {
-        padding: 14px 14px calc(14px + 46px);
+      .preview-img {
+        display: none;
       }
 
-      .side-panel {
-        max-width: 100%;
-        width: 100%;
+      .content {
+        padding: 28px 18px 36px;
       }
 
-      .login-panel .content,
-      .login-panel .lower {
-        padding: 14px;
+      .btn-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
       }
 
-      .login-panel .lower { grid-template-columns: 1fr; }
-
-      .mini-img,
-      .mini-text {
-        border-left: 0;
-        padding-left: 0;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
-        padding-top: 12px;
+      h1 {
+        font-size: clamp(18px, 6vw, 28px);
       }
-
-      .mini-img img { max-height: 180px; }
     }
 
-    /* Ultra-wide: breathe more on huge monitors */
-    @media (min-width: 1800px) {
-      .mini-img img {
-        max-height: 280px;
-      }
-
-      .side-panel {
-        max-width: 400px;
+    /* Very wide screens */
+    @media (min-width: 1600px) {
+      .preview-img {
+        width: clamp(180px, 13vw, 220px);
       }
     }
   </style>
 </head>
-
 <body>
-<!--
-  Place these files in the SAME folder as this index.html:
-  - score-example.png
-  - 3d-example.png
-  - circularity-ladder-shadows.png
--->
 <div class="hero">
-  <div class="topbar">
-    <div class="left">
-      <strong>GREEN AND CIRCULAR BUILDING COMPASS</strong>
-      <span>Method Dr. E. Durmisevic</span>
-    </div>
+  <div class="hero-overlay"></div>
 
-    <div class="right">
-      <div class="logo-pill">
-        <img src="./logo_4d.jpg" alt="4D Architects logo" />
-      </div>
-      <div class="logo-pill">
-        <img src="./eu.png" alt="European Union logo" />
-      </div>
+  <img
+    class="preview-img"
+    src="./260506-RBIM-model-login-dashboard.jpg"
+    alt=""
+    aria-hidden="true"
+  />
+
+  <div class="topbar">
+    <div class="logo-pill">
+      <img src="./logo_4d.jpg" alt="4D Architects logo" />
+    </div>
+    <div class="logo-pill">
+      <img src="./eu.png" alt="European Union logo" />
     </div>
   </div>
 
-  <main class="wrap">
-    <div class="left-panel">
-      <header class="headline">
-        <h1>
-          Dashboard for assessing the impact of design decisions<br />
-          on CO₂, materials, energy and well-being
-        </h1>
-      </header>
+  <main class="content">
+    <h1>Decoding Circular Capacity of Buildings</h1>
 
-      <section class="login-panel" role="dialog" aria-label="Login">
-        <div class="content">
-          <h2>GREEN AND CIRCULAR BUILDING COMPASS (GCBC) - Dashboard</h2>
-          <p class="sub">Decision Support for Multicriteria Optimisation</p>
-          <p class="desc">
-            The Green Circular <u>COMPASS</u> Dashboard integrates circularity—by combining the Transformation Capacity Index of a
-            building and the Reuse Potential Index of its materials into a single circularity profile—with energy efficiency
-            and wellbeing. It is a multicriteria decision-support dashboard for healthcare buildings, developed by <u>4D
-            Architects Amsterdam</u>.
-            <br><br>
-            <u>COMPASS</u> brings together green and circular building indicators in an interactive way, enabling real-life
-            analyses of design solutions or potential improvements to the performance of existing buildings.
-          </p>
-        </div>
+    <nav class="btn-grid" aria-label="Tool selection">
+      <a href="./dashboard/index.html" class="tool-btn dashboard">
+        <span class="label-small">Green Circulair Building</span>
+        <span class="label-big">DASHBOARD</span>
+      </a>
 
-        <div class="lower">
-          <form id="login-form" onsubmit="event.preventDefault();">
-            <div class="input">
-              <input
-                type="text"
-                name="username"
-                autocomplete="username"
-                placeholder="Gebruikersnaam"
-                aria-label="Gebruikersnaam"
-              />
-            </div>
-
-            <div class="input">
-              <input
-                type="password"
-                name="password"
-                autocomplete="current-password"
-                placeholder="Wachtwoord"
-                aria-label="Wachtwoord"
-              />
-            </div>
-
-            <button class="btn" type="submit">Login</button>
-          </form>
-
-          <div class="mini-img" aria-hidden="true">
-            <img
-              src="./circularity-ladder-shadows.png"
-              alt="Circularity ladder"
-            />
-          </div>
-
-          <div class="mini-text" aria-hidden="true">
-            <div class="label">CIRCULAR BUILDING PROFILE</div>
-            <div class="method">Method Dr. Elma Durmisevic</div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <aside class="side-panel" aria-label="Example score">
-      <div class="side-tint">
-        <img src="./score-example.png" alt="Radar chart" />
-      </div>
-    </aside>
+      <a href="./rp_index_page/index.html" class="tool-btn rpindex">
+        <span class="label-small">Reuse Potential Index</span>
+        <span class="label-big">RP Index</span>
+      </a>
+    </nav>
   </main>
 
-  <div class="footer">
-    ©4D Architects Amsterdam (GCB Compass) — made by collaborall powered by ANT OS
-  </div>
+  <footer>
+    <strong>©4D Architects Amsterdam</strong> &nbsp;|&nbsp; Method Dr. Elma Durmisevic
+    &nbsp;|&nbsp; made by collaborall powered by ANT OS
+  </footer>
 </div>
-
-<script>
-  const form = document.getElementById('login-form')
-  const submitButton = form.querySelector('button[type="submit"]')
-
-  const tokenEndpoint = 'https://api.antcde.io/oauth/token'
-  const targetBaseUrl = 'https://os.antcde.io/apps/019a5484-8d2f-7180-9ee3-61e12c4ae7b4'
-
-  const setBusy = (isBusy) => {
-    submitButton.disabled = isBusy
-    submitButton.textContent = isBusy ? 'Loading...' : 'Login'
-  }
-
-  form.addEventListener('submit', async () => {
-    const formData = new FormData(form)
-    const username = String(formData.get('username') || '').trim()
-    const password = String(formData.get('password') || '')
-
-    if (!username || !password) {
-      alert('Vul gebruikersnaam en wachtwoord in.')
-      return
-    }
-
-    setBusy(true)
-    try {
-      const body = new URLSearchParams({
-        client_id: '149',
-        client_secret: 'xL0FTRFziFONCkR8L4hNg7hX3DT37AjRdHJNqplA',
-        grant_type: 'password',
-        username,
-        password,
-      })
-
-      const response = await fetch(tokenEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body,
-      })
-
-      if (!response.ok) throw new Error(`Auth failed: ${response.status}`)
-
-      const data = await response.json()
-      const accessToken = data?.access_token
-      if (!accessToken) throw new Error('No access token returned')
-
-      const redirectUrl = new URL(targetBaseUrl)
-      redirectUrl.searchParams.set('split', 'single')
-      redirectUrl.searchParams.set('projectId', 'cde99d58-e5a0-491e-9709-c54ef1345f85')
-      redirectUrl.searchParams.set('notepad', 'apps')
-
-      const loginUrl = new URL('https://os.antcde.io/login')
-      loginUrl.searchParams.set('redirect', `${redirectUrl.pathname}${redirectUrl.search}`)
-      loginUrl.searchParams.set('token', accessToken)
-
-      window.location.assign(loginUrl.toString())
-    } catch (error) {
-      console.error(error)
-      alert('Inloggen mislukt. Controleer je gegevens.')
-    } finally {
-      setBusy(false)
-    }
-  })
-</script>
 </body>
 </html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reuse Potential Index</title>
+        <style>
+            body,
+            html {
+                height: 100%;
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .bg {
+                background-image: url('image.jpg');
+                height: 100%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                filter: grayscale(100%);
+                position: fixed;
+                width: 100%;
+                z-index: -1;
+            }
+
+            .container {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                box-sizing: border-box;
+                overflow-y: auto;
+            }
+
+            .content {
+                background-color: white;
+                padding: 30px;
+                max-width: 800px;
+                width: 100%;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                text-align: left;
+                box-sizing: border-box;
+            }
+
+            .content h1 {
+                color: #7BA829;
+            }
+
+            .content p {
+                margin-bottom: 20px;
+                line-height: 1.6;
+            }
+
+            .content img {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .login-form {
+                margin-top: 20px;
+            }
+
+            .login-form input[type="text"],
+            .login-form input[type="password"] {
+                width: calc(50% - 10px);
+                padding: 10px;
+                margin: 5px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            .login-form input[type="submit"] {
+                width: 100%;
+                padding: 10px;
+                margin-top: 10px;
+                background-color: #7BA829;
+                border: none;
+                color: white;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .login-form input[type="submit"]:hover {
+                background-color: #689f25;
+            }
+
+            .footer {
+                text-align: right;
+                margin-top: 20px;
+                font-size: 0.9em;
+                color: #555;
+            }
+
+            .topbar {
+                min-height: 64px;
+                background: rgba(255, 255, 255, 1);
+                color: #111;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 4px 18px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+                flex-wrap: wrap;
+                position: relative;
+                z-index: 1;
+            }
+
+            .topbar .left {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                line-height: 1.05;
+                min-width: 240px;
+            }
+
+            .topbar .left strong {
+                font-weight: 800;
+                letter-spacing: 0.02em;
+                font-size: 20px;
+            }
+
+            .topbar .left span {
+                font-size: 12px;
+                color: rgba(0, 0, 0, 0.65);
+                font-style: italic;
+            }
+
+            .topbar .right {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-left: auto;
+            }
+
+            .back-link {
+                font-size: 13px;
+                color: rgba(0, 0, 0, 0.5);
+                text-decoration: none;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                border-radius: 6px;
+                padding: 5px 11px;
+                white-space: nowrap;
+                transition: background 0.15s;
+            }
+
+            .back-link:hover { background: rgba(0, 0, 0, 0.06); }
+
+            .logo-pill {
+                min-width: 108px;
+                display: grid;
+                place-items: center;
+                border-radius: 8px;
+                user-select: none;
+            }
+
+            .logo-pill img {
+                max-height: 50px;
+                max-width: 100%;
+                width: auto;
+                display: block;
+                object-fit: contain;
+            }
+
+            .reveal-btn {
+                margin-left: 5px;
+                cursor: pointer;
+                background-color: #f1f1f1;
+                border: none;
+                padding: 5px;
+            }
+
+            .col {
+                float: left;
+                width: 50%;
+            }
+
+            @media (max-width: 640px) {
+                .content {
+                    padding: 16px;
+                }
+
+                .col {
+                    float: none;
+                    width: 100%;
+                }
+
+                .login-form input[type="text"],
+                .login-form input[type="password"] {
+                    width: calc(100% - 12px);
+                }
+
+                .login-form input[type="submit"] {
+                    width: calc(100% - 10px);
+                    margin: 5px;
+                }
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            function login(event) {
+                event.preventDefault();
+                const username = document.querySelector('input[type="text"]').value;
+                const password = document.querySelector('input[type="password"]').value;
+                const license = "cf0d19a1-809c-11ef-bd26-061d076d6703";
+                axios.post('https://api.antcde.io/oauth/token', {
+                    username: username,
+                    password: password,
+                    client_id: "102",  //102
+                    client_secret: "o3QaX3U831Z3zGxyH18Ee9a2s80jON2isSaEARjE",
+                    grant_type: "password"
+                })
+                    .then(response => {
+                        console.log('Login successful');
+                        window.location.replace("https://app.antcde.io/login?token=" + response.data.access_token + "&license=" + license + "");
+                    })
+                    .catch(error => {
+                        console.error('Error logging in:', error);
+                        alert(error);
+                        // Handle login error, e.g., display error message to user
+                    });
+            }
+        </script>
+    </head>
+
+    <body>
+        <div class="bg"></div>
+        <div class="topbar">
+            <div class="left">
+                <strong>REUSE POTENTIAL INDEX</strong>
+                <span>Method Dr. Elma Durmisevic</span>
+            </div>
+            <div class="right">
+                <a href="../index.html" class="back-link">← All tools</a>
+                <div class="logo-pill">
+                    <img src="./logo.png" alt="4D Architects logo" />
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="content">
+                <h1>Reuse Potential Index Calculator</h1>
+                <p>Reuse Potential Index is een instrument voor de beoordeling van de <strong>technische
+                        omkeerbaarheid</strong> van gebouwen en <strong>los maakbaarheid</strong> van bouw onderdelen
+                    waarmee het hergebruikpotentieel van bouw onderdelen worden gekwantificeerd en hergebruik opties van
+                    materialen gespecificeerd. Dit wordt gedaan aan de hand van de analyse van de mate van
+                    afhankelijkheden
+                    tussen bouwmaterialen (functionele, technische en fysieke afhankelijkheid) aan de hand van o.a.
+                    analyse
+                    van de verbindingen tussen materialen, mate van prefabricage en opbouw systematiek op de bouwplaats,
+                    resterende levensduur van materialen.</p>
+                <p><strong>Reuse Potential</strong> Index is ontwikkeld volgens methodologie van model E.Durmisevic (4D
+                    architects) die getoetst is tijdens EU project Buildings as Material Banks en geimplementeerd in
+                    Reversibel BIM (4D architects) dat onderdeel maakt van EU Digital Deconstruction Platform project.
+                    Methodologie, indicatoren van omkeerbare circulair bouwen en ontwerp richtlijnen van Elma Durmisevic
+                    zijn geintegreerd in check list van Elma Durmisevic zijn geintegreerd in check list van Regio
+                    Brussels, ISO 20887, en Levels.</br></br> Voor vragen rondom de tool kunt u contact opnemen met Thomas Bergstra: <a href="mailto:t.bergstra@4darchitects.nl">t.bergstra@4darchitects.nl</a>
+                <div class="col">
+                    <form class="login-form" onsubmit="login(event)">
+                        <input type="text" placeholder="Gebruikersnaam" style="width: 80%;">
+                        <input type="password" placeholder="Wachtwoord" id="password" style="width: 80%;"><br />
+                        <button type="button" class="reveal-btn" onclick="togglePassword()"
+                            style="float:left;">Show</button><br /><br />
+                        <input type="submit" value="Login" style="width: 85%; margin:5px;">
+                    </form>
+                </div>
+                <div class="col">
+                    <div style="background-image: url(./rpi.png); width:200px; height:200px; background-size: cover;">
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <span style="float:left;"> 4D Architects Amsterdam (RP e.d.) Method Elma Durmisevic </span>
+                    Powered by <a href="https://collaborall.net" style="text-decoration: none;">CollaborAll</a> & <a
+                        href="https://antcde.io" style="text-decoration: none;">ANT</a>
+                </div>
+                <a href="./register.html">Registreer u hier </a><br/>
+                <a href="https://app.antcde.io/forgot">Wachtwoord resetten</a><br/>
+                <a href="https://youtu.be/S2iC0rPMEWg">Bekijk hier de instructie video</a><br/>
+                <a href="#">Bekijk hier de instructie handleiding</a>
+            </div>
+        </div>
+        <script>
+            function togglePassword() {
+                const passwordField = document.getElementById('password');
+                const btn = document.querySelector('.reveal-btn');
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    btn.textContent = 'Hide';
+                } else {
+                    passwordField.type = 'password';
+                    btn.textContent = 'Show';
+                }
+            }
+        </script>
+    </body>
+
+    </html>

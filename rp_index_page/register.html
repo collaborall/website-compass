@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        form {
+            margin-right:10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        body,
+            html {
+                height: 100%;
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            .bg {
+                background-image: url('image.jpg');
+                height: 100%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                filter: grayscale(100%);
+                position: absolute;
+                width: 100%;
+                z-index: -1;
+            }
+
+            .container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                /* padding: 20px; */
+            }
+
+            .content {
+                background-color: white;
+                padding: 30px;
+                margin-top: 30px;
+                max-width: 800px;
+                width: 100%;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                text-align: left;
+            }
+
+            .content h1 {
+                color: #7BA829;
+            }
+
+            .content p {
+                margin-bottom: 20px;
+                line-height: 1.6;
+            }
+
+            .content img {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .login-form {
+                margin-top: 20px;
+            }
+
+            .login-form input[type="text"],
+            .login-form input[type="password"] {
+                width: calc(50% - 10px);
+                padding: 10px;
+                margin: 5px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            .login-form input[type="submit"] {
+                width: 100%;
+                padding: 10px;
+                margin-top: 10px;
+                background-color: #7BA829;
+                border: none;
+                color: white;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .login-form input[type="submit"]:hover {
+                background-color: #689f25;
+            }
+
+            .footer {
+                text-align: right;
+                margin-top: 20px;
+                font-size: 0.9em;
+                color: #555;
+            }
+
+            .logo {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                max-width: 150px;
+            }
+
+            .header {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                padding: 20px;
+                width: 100%;
+                font-weight: bold;
+                color: #689f25;
+                font-size: 3em;
+                background-color: white;
+            }
+
+            .reveal-btn {
+                margin-left: 5px;
+                cursor: pointer;
+                background-color: #f1f1f1;
+                border: none;
+                padding: 5px;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="bg"></div>
+        <div class="container">
+            <div class="content">
+                <div class="header">
+                    <span style="float:left; width: 100vw; margin-top: -10px;">Reuse Potential (RP<span
+                            style="font-size: 0.4em;">E.D.</span>)</span>
+                    <span style="font-size: 0.3em; color:black; float:left;">Method Dr.Elma Durmisevic</span>
+                </div>
+                <h1>User Registration</h1>
+                    <form id="registrationForm">
+                        <label for="company">Company</label>
+                        <input type="text" id="company" name="company" required>
+                
+                        <label for="firstname">First Name</label>
+                        <input type="text" id="firstname" name="firstname" required>
+                
+                        <label for="lastname">Last Name</label>
+                        <input type="text" id="lastname" name="lastname" required>
+                
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                
+                        <input type="submit" value="Register">
+                    </form>
+                <!-- <div style="float:left; width: 50%;">
+                    <div style="background-image: url(./rpi.png); width:200px; height:200px; background-size: cover;">
+                    </div>
+                </div> -->
+
+                <div class="footer">
+                    <span style="float:left;"> 4D Architects Amsterdam (RP e.d.) Method Elma Durmisevic </span>
+                    Powered by <a href="https://collaborall.net" style="text-decoration: none;">CollaborAll</a> & <a
+                        href="https://antcde.io" style="text-decoration: none;">ANT</a>
+                </div>
+                <img src="logo.png" alt="4D Architects" class="logo">
+            </div>
+        </div>
+    <script>
+        const form = document.getElementById('registrationForm');
+        const webhookURL = ''; // Set your Slack webhook URL here (do not commit)
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const firstname = document.getElementById('firstname').value;
+            const lastname = document.getElementById('lastname').value;
+            const company = document.getElementById('company').value;
+
+            // const data = {
+            //     text: `New user registration:\n*Email:* ${email}\n*First Name:* ${firstname}\n*Last Name:* ${lastname}`
+            // };
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            const raw = JSON.stringify({
+                text: `New user registration:\n*Company:* ${company}\n*Email:* ${email}\n*First Name:* ${firstname}\n*Last Name:* ${lastname}`
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch(webhookURL, requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    alert('Registration successful! Our support team will handle the rest.');
+                    // form.reset();  // Reset the form after successful submission
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => alert(error));
+        });
+    </script>
+
+</body>
+
+</html>
